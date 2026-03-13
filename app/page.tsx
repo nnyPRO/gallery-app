@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { text } from 'stream/consumers'
 
 interface Keyword {
   id: number
@@ -32,7 +33,7 @@ export default function Home() {
     // If reset is false: (e.g., scroll down to load the next page) the system will use the Spread Operator (...) to append the existing image (prev) 
     // to the newly loaded image (data), creating an ever-evolving list.
     setImages((prev) => (reset ? data : [...prev, ...data]))
-    
+
     setHasMore(data.length === 8)
     setLoading(false)
   }
@@ -59,7 +60,7 @@ export default function Home() {
         }
       },
       // The object must be 100% visible (the entire block) for the process to work. If only the edges are visible, do nothing yet.
-      { threshold: 1.0 } 
+      { threshold: 1.0 }
     )
     // start observing
     if (observerRef.current) observer.observe(observerRef.current)
@@ -71,51 +72,71 @@ export default function Home() {
   )
 
   return (
-    <main className="max-w-6xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">Gallery</h1>
+    <div>
+      {/* <h1 className="text-3xl font-bold mb-6 text-gray-600">Gallery</h1> */}
+      <header className="sticky top-0 border-b shadow-sm z-10 px-6 py-4 " style={{ backgroundColor: '#A7C7E7' }}>
+        <div className="max-w-6xl mx-auto">
+          <h1 className="text-3xl font-bold tracking-tight text-gray-700">🖼️ Gallery</h1>
+          <p className="text-lg text-gray-700 m-1"> Browse and filter images by keyword</p>
+        </div>
+      </header>
 
-      {/* Keyword Filter */}
-      <div className="flex flex-wrap gap-2 mb-6">
-        <button
-          onClick={() => setKeyword(null)}
-          className={`px-4 py-1 rounded-full border ${!keyword ? 'bg-black text-white' : 'bg-white text-black'}`}
-        >
-          All
-        </button>
-        {allKeywords.map((k) => (
+
+      <main className="max-w-6xl mx-auto p-6">
+
+
+        {/* Keyword Filter */}
+        <div className="flex flex-wrap gap-2 mb-6">
           <button
-            key={k}
-            onClick={() => setKeyword(k)}
-            className={`px-4 py-1 rounded-full border ${keyword === k ? 'bg-black text-white' : 'bg-white text-black'}`}
-          >
-            #{k}
+            onClick={() => setKeyword(null)}
+            style={!keyword ? { backgroundColor: '#A7C7E7' } : {}}
+            onMouseEnter={(e) => { if (keyword) e.currentTarget.style.backgroundColor = '#d8e3ef' }}
+            onMouseLeave={(e) => { if (keyword) e.currentTarget.style.backgroundColor = '' }}
+            className="text-black px-4 py-1 rounded-full border transition-colors cursor-pointer"          >
+            All
           </button>
-        ))}
-      </div>
+          {allKeywords.map((k) => (
+            <button
+              key={k}
+              onClick={() => setKeyword(k)}
+              style={keyword === k ? { backgroundColor: '#A7C7E7' } : {}}
+              onMouseEnter={(e) => { if (keyword !== k) e.currentTarget.style.backgroundColor = '#d8e3ef' }}
+              onMouseLeave={(e) => { if (keyword !== k) e.currentTarget.style.backgroundColor = '' }}
+              className="text-black px-4 py-1 rounded-full border transition-colors cursor-pointer"            >
+              #{k}
+            </button>
+          ))}
+        </div>
 
-      {/* Image Grid */}
-      <div className="columns-2 md:columns-3 lg:columns-4 gap-4">
-        {images.map((img) => (
-          <div key={img.id} className="break-inside-avoid mb-4">
-            <img src={img.url} alt={img.keywords.map((k) => k.name).join(', ')} className="w-full rounded-lg" />
-            <div className="flex flex-wrap gap-1 mt-1">
-              {img.keywords.map((k) => (
-                <span
-                  key={k.id}
-                  onClick={() => setKeyword(k.name)}
-                  className="text-xl text-blue-500 cursor-pointer hover:underline"
-                >
-                  #{k.name}
-                </span>
-              ))}
+        {/* Image Grid */}
+        <div className="columns-2 md:columns-3 lg:columns-4 gap-4">
+          {images.map((img) => (
+            <div key={img.id} className="break-inside-avoid mb-4">
+              <img src={img.url} alt={img.keywords.map((k) => k.name).join(', ')} className="w-full rounded-lg" />
+              <div className="flex flex-wrap gap-1 mt-1">
+                {img.keywords.map((k) => (
+                  <span
+                    key={k.id}
+                    onClick={() => setKeyword(k.name)}
+                    style={{ color: '#327ac2' }}
+                    className="text-xl cursor-pointer hover:underline"
+                  >
+                    #{k.name}
+                  </span>
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
 
-      {/* Infinite Scroll Trigger */}
-      <div ref={observerRef} className="h-10 mt-4" />
-      {loading && <p className="text-center text-gray-400">Loading...</p>}
-    </main>
+        {/* Infinite Scroll Trigger */}
+        <div ref={observerRef} className="h-10 pb-4" />
+        {loading && (
+          <div className="flex justify-center py-4">
+            <div className="w-15 h-15 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin" />
+          </div>
+        )}
+      </main>
+    </div>
   )
 }

@@ -4,10 +4,18 @@ import { PrismaPg } from '@prisma/adapter-pg'
 import { PrismaClient } from '@prisma/client'
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL! })
-const adapter = new PrismaPg(pool)
+const adapter = new PrismaPg(pool as any)
 const prisma = new PrismaClient({ adapter })
 
 const images = [
+  { url: 'https://placehold.co/600x400', keywords: ['nature', 'landscape'] },
+  { url: 'https://placehold.co/400x600', keywords: ['portrait', 'people'] },
+  { url: 'https://placehold.co/800x600', keywords: ['nature', 'water'] },
+  { url: 'https://placehold.co/500x500', keywords: ['city', 'landscape'] },
+  { url: 'https://placehold.co/700x400', keywords: ['people', 'city'] },
+  { url: 'https://placehold.co/400x800', keywords: ['portrait', 'nature'] },
+  { url: 'https://placehold.co/600x600', keywords: ['water', 'landscape'] },
+  { url: 'https://placehold.co/900x600', keywords: ['city', 'people'] },
   { url: 'https://placehold.co/600x400', keywords: ['nature', 'landscape'] },
   { url: 'https://placehold.co/400x600', keywords: ['portrait', 'people'] },
   { url: 'https://placehold.co/800x600', keywords: ['nature', 'water'] },
