@@ -49,7 +49,7 @@ export default function Home() {
   useEffect(() => {
     fetchImages(1, keyword, true)  // reset is true so overwrite it with the new image (data)
     setPage(1)
-    setImages([])
+    setImages([])  // clear old images
   }, [keyword])
 
   useEffect(() => {
@@ -87,10 +87,7 @@ export default function Home() {
         </div>
       </header>
 
-
       <main className="max-w-6xl mx-auto p-6">
-
-
         {/* Keyword Filter */}
         <div className="flex flex-wrap gap-2 mb-6">
           <button
@@ -98,7 +95,7 @@ export default function Home() {
             style={!keyword ? { backgroundColor: '#A7C7E7' } : {}}
             onMouseEnter={(e) => { if (keyword) e.currentTarget.style.backgroundColor = '#d8e3ef' }}
             onMouseLeave={(e) => { if (keyword) e.currentTarget.style.backgroundColor = '' }}
-            className="text-black px-4 py-1 rounded-full border transition-colors cursor-pointer"          >
+            className="text-black px-4 py-1 rounded-full border transition-colors cursor-pointer">
             All
           </button>
           {allKeywords.map((k) => (
@@ -108,7 +105,7 @@ export default function Home() {
               style={keyword === k ? { backgroundColor: '#A7C7E7' } : {}}
               onMouseEnter={(e) => { if (keyword !== k) e.currentTarget.style.backgroundColor = '#d8e3ef' }}
               onMouseLeave={(e) => { if (keyword !== k) e.currentTarget.style.backgroundColor = '' }}
-              className="text-black px-4 py-1 rounded-full border transition-colors cursor-pointer"            >
+              className="text-black px-4 py-1 rounded-full border transition-colors cursor-pointer">
               #{k}
             </button>
           ))}
