@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { text } from 'stream/consumers'
 
 interface Keyword {
   id: number
@@ -48,9 +47,8 @@ export default function Home() {
   }, [])
 
   useEffect(() => {
-    fetchImages(1, keyword, true)
+    fetchImages(1, keyword, true)  // reset is true so overwrite it with the new image (data)
     setPage(1)
-    console.log("Images:", (images));
   }, [keyword])
 
   useEffect(() => {
@@ -81,7 +79,6 @@ export default function Home() {
 
   return (
     <div>
-      {/* <h1 className="text-3xl font-bold mb-6 text-gray-600">Gallery</h1> */}
       <header className="sticky top-0 border-b shadow-sm z-10 px-6 py-4 " style={{ backgroundColor: '#A7C7E7' }}>
         <div className="max-w-6xl mx-auto">
           <h1 className="text-3xl font-bold tracking-tight text-gray-700">🖼️ Gallery</h1>
@@ -117,33 +114,27 @@ export default function Home() {
         </div>
 
         {/* Image Grid */}
-        {loading ?
-          // {/* //  <div className="flex justify-center py-4">
-          //   //   <div className="w-15 h-15 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin" />
-          //   // </div>  */}
-          <></>
-          : (
-
-            <div className="columns-2 md:columns-3 lg:columns-4 gap-4">
-              {images.map((img) => (
-                <div key={img.id} className="break-inside-avoid mb-4">
-                  <img src={img.url} alt={img.keywords.map((k) => k.name).join(', ')} className="w-full rounded-lg" />
-                  <div className="flex flex-wrap gap-1 mt-1">
-                    {img.keywords.map((k) => (
-                      <span
-                        key={k.id}
-                        onClick={() => setKeyword(k.name)}
-                        style={{ color: '#327ac2' }}
-                        className="text-xl cursor-pointer hover:underline"
-                      >
-                        #{k.name}
-                      </span>
-                    ))}
-                  </div>
+        {!loading && (
+          <div className="columns-2 md:columns-3 lg:columns-4 gap-4">
+            {images.map((img) => (
+              <div key={img.id} className="break-inside-avoid mb-4">
+                <img src={img.url} alt={img.keywords.map((k) => k.name).join(', ')} className="w-full rounded-lg" />
+                <div className="flex flex-wrap gap-1 mt-1">
+                  {img.keywords.map((k) => (
+                    <span
+                      key={k.id}
+                      onClick={() => setKeyword(k.name)}
+                      style={{ color: '#327ac2' }}
+                      className="text-xl cursor-pointer hover:underline"
+                    >
+                      #{k.name}
+                    </span>
+                  ))}
                 </div>
-              ))}
-            </div>
-          )}
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* Infinite Scroll Trigger */}
         <div ref={observerRef} className="h-10 pb-4" />
